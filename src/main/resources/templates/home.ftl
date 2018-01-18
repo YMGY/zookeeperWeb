@@ -20,7 +20,7 @@
             <a href="/home/index?zkPath=${parentNode}"><..></a>
             <br/>
             <template v-for="node in leafNodes">
-                <input type="checkbox" name="nodeChkGroup" :value="node.zkPath"/>
+                <input type="checkbox" name="nodeChkGroup" v-model="nodeNames" :value="node.zkPath"/>
                 <span class="glyphicon glyphicon-folder-close"></span>
                 <a :href="'/home/index?zkPath='+node.zkPath">{{node.name}}</a>
                 <br/>
@@ -109,7 +109,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="button" id="createNode" name="action" v-on:click="addNode();" class="btn btn-primary">保存</button>
+                            <button type="button" id="createNode" name="action" v-on:click="addNode();" data-dismiss="modal" class="btn btn-primary">保存</button>
                         </div>
                     </div>
                 </div>
@@ -143,26 +143,6 @@
                                    class="btn btn-primary"/>
                             <input type="submit" id="updatePropertyBtn" name="action" value="更新属性" @click="updateProperty"
                                    class="btn btn-primary"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Delete Property Modal -->
-            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Delete</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h3>确定删除吗?</h3>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <input type="submit" name="action" value="删除" @click="delNode" class="btn btn-primary"/>
                         </div>
                     </div>
                 </div>

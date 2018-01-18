@@ -12,7 +12,7 @@
 
                 <li><a href="#" data-toggle="modal" data-target="#addNodeModal">新增节点</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#addPropertyModal" id="addPropertyBtn">新增属性</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#deleteModal">删除节点</a></li>
+                <li><a href="javascript:void(0)" @click="delNodeBtn()">删除节点</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#importModal">导入</a></li>
                 <li><a href="/export?zkPath=" target="_blank">输出</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#searchModal">搜索</a></li>

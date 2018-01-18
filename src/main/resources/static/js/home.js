@@ -40,29 +40,37 @@ var app = new Vue({
         },
         newNode:'',
         currentNode:'/',
+        nodeNames:[]
     },
     mounted: function () {
-        var _self = this;
-        var parentPath=_self.$refs.parentPath.value;
-        axiosUtils.get("/home/getChilds?zkPath="+parentPath)
-            .then(function (res) {
-                if (res.data.success) {
-                    _self.leafNodes = res.data.data;
-                }
-            }).catch(function (reason) {
-                console.log(reason);
-        });
-        axiosUtils.post('/home/getKVs',{zkPath:parentPath})
-            .then(function (res) {
-                if(res.data.success){
-                    _self.rightDatas=res.data.data;
-                }
-            })
-            .catch(function (reason) {
-                console.log(reason);
-            });
+        this.getNodeList();
     },
     methods:{
+    	getNodeList:function(){
+    		var _self = this;
+            var parentPath=_self.$refs.parentPath.value;
+            axiosUtils.get("/home/getChilds?zkPath="+parentPath)
+                .then(function (res) {
+                    if (res.data.success) {
+                        _self.leafNodes = res.data.data;
+                        console.log("1");
+                        console.log(_self.leafNodes);
+                    }
+                }).catch(function (reason) {
+                    console.log(reason);
+            });
+            axiosUtils.post('/home/getKVs',{zkPath:parentPath})
+                .then(function (res) {
+                    if(res.data.success){
+                        _self.rightDatas=res.data.data;
+                    }
+                })
+                .catch(function (reason) {
+                    console.log(reason);
+                });
+            console.log("2");
+            console.log(_self.leafNodes);
+    	},
         addNode:function(){
             var _self=this;
             var parentPath=_self.$refs.parentPath.value;
@@ -73,13 +81,14 @@ var app = new Vue({
             axiosUtils.post('/home/createNode',postData)
                 .then(function (res) {
                     if(res.data.success){
-                        alert('创建节点成功！');
+                        layer.alert('创建节点成功！');
                     }
                 })
                 .catch(function (reason) {
                     console.log(reason);
                 });
-
+            // 刷新节点列表
+            _self.getNodeList();
         },
         addProperty:function () {
             var _self=this;
@@ -102,8 +111,33 @@ var app = new Vue({
         updateProperty:function(){
             alert('updateProperty');
         },
-        delNode:function () {
-            alert('delete');
+        delNodeBtn:function () {
+        	var _self = this;
+        	var nodeNamesLength = _self.nodeNames.length;
+        	if(nodeNamesLength <= 0){
+        		layer.alert("请选择要删除节点！");
+        		return false;
+        	} 
+        	if(nodeNamesLength > 1){
+        		layer.alert("只能删除一个节点");
+        		return false;
+        	} 
+        	var postData={
+        			nodeName:_self.nodeNames[0],
+   	            }
+	   		 axiosUtils.post('/home/deleteNode',postData)
+	            .then(function(res){
+	                if(res.data.success){
+	               	 	layer.alert("删除节点成功！");
+	                }else{
+	                	layer.alert(res.data.msg);
+	                }
+	            })
+	            .catch(function (reason) {
+	                console.log(reason);
+	            })
+        	 // 刷新节点列表
+            _self.getNodeList();
         }
     }
 });

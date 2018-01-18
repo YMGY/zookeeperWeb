@@ -1,10 +1,8 @@
 package com.guanyi.zkweb.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.guanyi.zkweb.services.ZKService;
 import com.guanyi.zkweb.services.models.KeyValue;
 import com.guanyi.zkweb.services.models.Node;
-import com.guanyi.zkweb.utils.ZkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.management.NotificationEmitter;
-import java.nio.file.FileStore;
 import java.util.List;
 
 @RestController
@@ -27,13 +22,14 @@ public class HomeController {
     @RequestMapping("/index")
     public ModelAndView index(String zkPath){
         ModelAndView view=new ModelAndView("/home");
-        view.addObject("zkPath",zkPath);
         if(StringUtils.isEmpty(zkPath)||"/".equals(zkPath)){
             view.addObject("parentNode","");
+            zkPath = "/";
         }else{
             String parentNode=zkPath.substring(0,zkPath.lastIndexOf("/"));
             view.addObject("parentNode",parentNode);
         }
+        view.addObject("zkPath",zkPath);
         return view;
     }
 
@@ -140,19 +136,48 @@ public class HomeController {
     }
 
     /**
-     * 删除节点
+     * 删除单节点
      * @param nodeName
      * @return
      */
     @RequestMapping("/deleteNode")
     public @ResponseBody ResponseMessage deleteNode(String nodeName){
         try{
-            zkService.deleteNode(nodeName);
+        	ResponseMessage rm = null;
+        	List<Node> list = zkService.getChilds(nodeName);
+        	if(list.size() > 0) {
+        		rm=new ResponseMessage("存在子节点，不能删除！");
+        		return rm;
+        	}
+        	List<KeyValue> kvs = zkService.getKVs(nodeName);
+        	if(kvs.size() > 0) {
+        		rm=new ResponseMessage("该节点存在属性，不能删除！");
+        		return rm;
+        	}
+        	zkService.deleteNode(nodeName);
+            rm=new ResponseMessage(true,"删除节点成功！",null);
+            return rm;
+        }catch (Exception ex){
+            this.logger.error(ex.getMessage(),ex);
+            ResponseMessage rm=new ResponseMessage("删除节点失败！");
+            return rm;
+        }
+    }
+    
+    /**
+     * 删除节点(强制删除)
+     * @param nodeName
+     * @return
+     */
+    @RequestMapping("/deleteNodes")
+    public @ResponseBody ResponseMessage deleteNodes(String[] nodeNames){
+        try{
+            zkService.mandatoryDeleteNodes(nodeNames);
             ResponseMessage rm=new ResponseMessage(true,"删除节点成功！",null);
             return rm;
         }catch (Exception ex){
             this.logger.error(ex.getMessage(),ex);
-            ResponseMessage rm=new ResponseMessage("删除节点是吧！");
+            ResponseMessage rm=new ResponseMessage("删除节点失败！");
             return rm;
         }
     }

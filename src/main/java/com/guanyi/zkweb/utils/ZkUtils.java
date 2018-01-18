@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 public class ZkUtils {
-
+	
     String zkConnection;
 
     CuratorFramework client;
@@ -122,11 +122,36 @@ public class ZkUtils {
             return this.client.getChildren().forPath(nodeName);
         }
     }
+
     public void delNode(String nodeName) throws Exception{
         nodeName=getNodeName(nodeName);
         Stat stat=this.client.checkExists().forPath(nodeName);
         if(stat!=null){
             this.client.delete().forPath(nodeName);
         }
+    }
+    
+    private void deleteNode(String nodeName) throws Exception{
+    	nodeName=getNodeName(nodeName);
+    	this.client.getZookeeperClient().getZooKeeper().delete(nodeName, -1);
+    	nodeName = nodeName.substring(0, nodeName.lastIndexOf("/"));
+    	if(nodeName.length() > 1) {
+    		this.deleteNode(nodeName);
+    	}
+    }
+    /**
+     * 强制删除节点
+     * @param nodeName
+     * @throws Exception
+     */
+    public void mandatoryDeleteNode(String nodeName) throws Exception{
+    	List<String> childNodeList = this.getChildNodes(nodeName);
+    	if(childNodeList != null && childNodeList.size() > 0) {
+    		for(String childNode : childNodeList) {
+    			this.mandatoryDeleteNode(getNodeName(nodeName)+getNodeName(childNode));
+    		}
+    	}else {
+    		this.deleteNode(nodeName);
+    	}
     }
 }

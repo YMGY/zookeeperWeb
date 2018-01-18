@@ -94,4 +94,17 @@ public class ZKService {
     public void deleteNode(String nodeName) throws Exception{
         zkUtils.delNode(nodeName);
     }
+    
+    /**
+     * 强制删除多节点
+     * @param nodeNames
+     * @throws Exception
+     */
+    public void mandatoryDeleteNodes(String[] nodeNames) throws Exception{
+    	if(nodeNames != null && nodeNames.length > 0) {
+    		for(String nodeName : nodeNames) {
+    			zkUtils.mandatoryDeleteNode(nodeName);
+    		}
+    	}
+    }
 }

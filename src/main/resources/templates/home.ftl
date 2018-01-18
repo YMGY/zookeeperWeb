@@ -139,9 +139,9 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <input type="submit" id="savePropertyBtn" name="action" value="保存属性" @click="addProperty"
+                            <input type="submit" id="savePropertyBtn"  data-dismiss="modal" name="action" value="保存属性" @click="addProperty"
                                    class="btn btn-primary"/>
-                            <input type="submit" id="updatePropertyBtn" name="action" value="更新属性" @click="updateProperty"
+                            <input type="submit" id="updatePropertyBtn" data-dismiss="modal" name="action" value="更新属性" @click="updateProperty"
                                    class="btn btn-primary"/>
                         </div>
                     </div>

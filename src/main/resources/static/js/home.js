@@ -53,8 +53,6 @@ var app = new Vue({
                 .then(function (res) {
                     if (res.data.success) {
                         _self.leafNodes = res.data.data;
-                        console.log("1");
-                        console.log(_self.leafNodes);
                     }
                 }).catch(function (reason) {
                     console.log(reason);
@@ -68,8 +66,6 @@ var app = new Vue({
                 .catch(function (reason) {
                     console.log(reason);
                 });
-            console.log("2");
-            console.log(_self.leafNodes);
     	},
         addNode:function(){
             var _self=this;
@@ -81,14 +77,16 @@ var app = new Vue({
             axiosUtils.post('/home/createNode',postData)
                 .then(function (res) {
                     if(res.data.success){
-                        layer.alert('创建节点成功！');
+                        // 刷新节点列表
+                        _self.getNodeList();
+                        // 初始化
+                        _self.newNode = "";
+                        layer.msg('新增节点成功！', {icon: 1, time: 1500});  
                     }
                 })
                 .catch(function (reason) {
                     console.log(reason);
                 });
-            // 刷新节点列表
-            _self.getNodeList();
         },
         addProperty:function () {
             var _self=this;
@@ -101,7 +99,12 @@ var app = new Vue({
             axiosUtils.post('/home/addParameter',postData)
                 .then(function(res){
                     if(res.data.success){
-                        alert('创建属性成功！');
+                    	// 刷新节点列表
+                        _self.getNodeList();
+                        //初始化
+                        _self.keyValue.key = "";
+                        _self.keyValue.value = "";
+                        layer.msg('新增属性成功！', {icon: 1, time: 1500});
                     }
                 })
                 .catch(function (reason) {
@@ -128,7 +131,11 @@ var app = new Vue({
 	   		 axiosUtils.post('/home/deleteNode',postData)
 	            .then(function(res){
 	                if(res.data.success){
-	               	 	layer.alert("删除节点成功！");
+	                	// 刷新节点列表
+                        _self.getNodeList();
+                        // 清空选择过的节点
+                        _self.nodeNames =[];
+	               	 	layer.msg('删除属性成功！', {icon: 1, time: 1500});
 	                }else{
 	                	layer.alert(res.data.msg);
 	                }
@@ -136,8 +143,6 @@ var app = new Vue({
 	            .catch(function (reason) {
 	                console.log(reason);
 	            })
-        	 // 刷新节点列表
-            _self.getNodeList();
         }
     }
 });

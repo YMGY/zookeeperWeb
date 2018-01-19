@@ -27,6 +27,10 @@ $(document).ready(function() {
         $("#updatePropertyBtn").hide();
         $("#savePropertyBtn").show();
     });
+    
+    $("#addPropertyModalForm").validate({
+    	errorClass: "label-error", 
+    });
 });
 
 var app = new Vue({
@@ -81,7 +85,7 @@ var app = new Vue({
                         _self.getNodeList();
                         // 初始化
                         _self.newNode = "";
-                        layer.msg('新增节点成功！', {icon: 1, time: 1500});  
+                        layer.msg('新增节点成功！', {icon: 1});  
                     }
                 })
                 .catch(function (reason) {
@@ -90,26 +94,32 @@ var app = new Vue({
         },
         addProperty:function () {
             var _self=this;
-            var parentPath=_self.$refs.parentPath.value;
-            var postData={
-                parentNode:parentPath,
-                key:_self.keyValue.key,
-                value:_self.keyValue.value
+            var flag = $("#addPropertyModalForm").valid();
+            if(flag){
+            	var parentPath=_self.$refs.parentPath.value;
+                var postData={
+                    parentNode:parentPath,
+                    key:_self.keyValue.key,
+                    value:_self.keyValue.value
+                }
+                axiosUtils.post('/home/addParameter',postData)
+                    .then(function(res){
+                        if(res.data.success){
+                        	$('#addPropertyModal').modal('hide');
+                        	// 刷新节点列表
+                            _self.getNodeList();
+                            //初始化
+                            _self.keyValue.key = "";
+                            _self.keyValue.value = "";
+                            layer.msg('新增属性成功！', {icon: 1});
+                        }else{
+                        	layer.alert(res.data.msg);
+                        }
+                    })
+                    .catch(function (reason) {
+                        console.log(reason);
+                    })
             }
-            axiosUtils.post('/home/addParameter',postData)
-                .then(function(res){
-                    if(res.data.success){
-                    	// 刷新节点列表
-                        _self.getNodeList();
-                        //初始化
-                        _self.keyValue.key = "";
-                        _self.keyValue.value = "";
-                        layer.msg('新增属性成功！', {icon: 1, time: 1500});
-                    }
-                })
-                .catch(function (reason) {
-                    console.log(reason);
-                })
         },
         updateProperty:function(){
             alert('updateProperty');
@@ -135,7 +145,7 @@ var app = new Vue({
                         _self.getNodeList();
                         // 清空选择过的节点
                         _self.nodeNames =[];
-	               	 	layer.msg('删除属性成功！', {icon: 1, time: 1500});
+	               	 	layer.msg('删除属性成功！', {icon: 1});
 	                }else{
 	                	layer.alert(res.data.msg);
 	                }

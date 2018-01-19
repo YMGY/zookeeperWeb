@@ -3,7 +3,7 @@
     <div class="container">
 
         <div class="navbar-header">
-            <a href="/home"><img src="/images/shcem.ico"/></a>
+            <a href="/home/index"><img src="/images/shcem.ico"/></a>
             &nbsp;&nbsp;
         </div>
 

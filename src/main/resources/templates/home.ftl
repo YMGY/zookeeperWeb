@@ -119,32 +119,34 @@
             <div class="modal fade" id="addPropertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">添加属性</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-addon">Key</span>
-                                <input type="text" id="newProperty" name="newProperty" v-model="keyValue.key" class="form-control"
-                                       placeholder="name">
-                            </div>
-                            <br/>
-                            <div class="input-group input-group-lg">
-                                <span class="input-group-addon">Value</span>
-                                <textarea id="newValue" name="newValue" class="form-control" v-model="keyValue.value" placeholder="value"
-                                          style="resize:vertical;"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <input type="submit" id="savePropertyBtn"  data-dismiss="modal" name="action" value="保存属性" @click="addProperty"
-                                   class="btn btn-primary"/>
-                            <input type="submit" id="updatePropertyBtn" data-dismiss="modal" name="action" value="更新属性" @click="updateProperty"
-                                   class="btn btn-primary"/>
-                        </div>
-                    </div>
+               		<form id="addPropertyModalForm" action="#" method="post">
+	                    <div class="modal-content">
+	                        <div class="modal-header">
+	                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                            <h4 class="modal-title" id="myModalLabel">添加属性</h4>
+	                        </div>
+	                        <div class="modal-body">
+	                            <div class="input-group input-group-lg">
+	                                <span class="input-group-addon">Key</span>
+	                                <input type="text" required  id="newProperty" name="newProperty" v-model="keyValue.key" class="form-control"
+	                                       placeholder="name">
+	                            </div>
+	                            <br/>
+	                            <div class="input-group input-group-lg">
+	                                <span class="input-group-addon">Value</span>
+	                                <textarea id="newValue" required  name="newValue" class="form-control" v-model="keyValue.value" placeholder="value"
+	                                          style="resize:vertical;"></textarea>
+	                            </div>
+	                        </div>
+	                        <div class="modal-footer">
+	                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	                            <input type="button" id="savePropertyBtn"  name="action" value="保存属性" @click="addProperty"
+	                                   class="btn btn-primary"/>
+	                            <input type="button" id="updatePropertyBtn" data-dismiss="modal" name="action" value="更新属性" @click="updateProperty"
+	                                   class="btn btn-primary"/>
+	                        </div>
+	                    </div>
+	            	</form>
                 </div>
             </div>
 

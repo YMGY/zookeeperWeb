@@ -27,7 +27,9 @@ $(document).ready(function() {
         $("#updatePropertyBtn").hide();
         $("#savePropertyBtn").show();
     });
-    
+    $("#addNodeModalForm").validate({
+    	errorClass: "label-error", 
+    });
     $("#addPropertyModalForm").validate({
     	errorClass: "label-error", 
     });
@@ -73,24 +75,28 @@ var app = new Vue({
     	},
         addNode:function(){
             var _self=this;
-            var parentPath=_self.$refs.parentPath.value;
-            var postData={
-                parentNode:parentPath,
-                node:_self.newNode
-            };
-            axiosUtils.post('/home/createNode',postData)
-                .then(function (res) {
-                    if(res.data.success){
-                        // 刷新节点列表
-                        _self.getNodeList();
-                        // 初始化
-                        _self.newNode = "";
-                        layer.msg('新增节点成功！', {icon: 1});  
-                    }
-                })
-                .catch(function (reason) {
-                    console.log(reason);
-                });
+            var flag = $("#addNodeModalForm").valid();
+            if(flag){
+            	var parentPath=_self.$refs.parentPath.value;
+                var postData={
+                    parentNode:parentPath,
+                    node:_self.newNode
+                };
+                axiosUtils.post('/home/createNode',postData)
+                    .then(function (res) {
+                        if(res.data.success){
+                        	$('#addNodeModal').modal('hide');
+                            // 刷新节点列表
+                            _self.getNodeList();
+                            // 初始化
+                            _self.newNode = "";
+                            layer.msg('新增节点成功！', {icon: 1});  
+                        }
+                    })
+                    .catch(function (reason) {
+                        console.log(reason);
+                    });
+            }
         },
         addProperty:function () {
             var _self=this;
